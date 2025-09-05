@@ -64,17 +64,20 @@
                     </div>
                 </div>
             </div>
+            <!--  
             <div class="hero-bubble">
                 <div class="hero-image-1">
-                    <img src="images/advogado-com-cliente.png" alt="Advogado com cliente" class="float-animation">
+                    <img src="images/Imagem de advogado sentado em cadeira com celular.png" alt="Advogado com cliente" class="float-animation">
                 </div>
+              
                 <div class="hero-image-2">
-                    <img src="images/Img-hero-3.jpg" alt="Advogado com cliente" class="float-animation">
+                    <img src="images/advogado utilizando celular em sua mesa de escritorio.png" alt="Advogado com cliente" class="float-animation">
                 </div>
                 <div class="hero-image-3">
-                    <img src="images/Img-hero-2.jpg" alt="Advogado com cliente" class="float-animation">
-                </div>
+                    <img src="images/imagem de advogado mexendo no notebook.png" alt="Advogado com cliente" class="float-animation">
+                </div>                
             </div>
+            -->
         </div>
         <div class="hero-scroll">
             <span>Role para ver mais</span>
@@ -174,7 +177,7 @@
                 </div>
             </div>
             <div class="about-image">
-                <img src="images/img-hero.png" alt="Equipe Advoclique" class="zoom-animation">
+                <img src="images/advogado utilizando celular em sua mesa de escritorio.png" alt="Equipe Advoclique" class="zoom-animation">
                 <div class="experience-badge">
                     <span class="years">5+</span>
                     <span class="label">Anos de Experiência</span>
@@ -423,17 +426,17 @@
                 <p class="section-subtitle">Preencha o formulário e entraremos em contato em até 24h</p>
                 <form id="leadForm">
                     <div class="form-group">
-                        <input type="text" id="name" name="name" required>
-                        <label for="name">Seu nome</label>
-                    </div>
-                    <div class="form-group">
-                        <input type="email" id="email" name="email" required>
-                        <label for="email">Seu e-mail</label>
-                    </div>
-                    <div class="form-group">
-                        <input type="tel" id="phone" name="phone" required>
-                        <label for="phone">Seu WhatsApp</label>
-                    </div>
+                            <input type="text" id="name" name="name" required>
+                            <label for="name">Seu nome completo</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="email" id="email" name="email" required>
+                            <label for="email">Seu melhor e-mail</label>
+                        </div>
+                        <div class="form-group">
+                            <input type="tel" id="phone" name="phone" required>
+                            <label for="phone">Telefone WhatsApp</label>
+                        </div>
                     <div class="form-group">
                         <select id="service" name="service" required>
                             <option value="" disabled selected></option>
@@ -497,6 +500,76 @@
             </div>
         </div>
     </section>
+
+    <!-- JavaScript -->
+    <script>
+    document.getElementById('contato').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        const form = e.target;
+        const submitButton = form.querySelector('button[type="submit"]');
+        const originalButtonText = submitButton.innerHTML;
+        
+        // Mostrar estado de carregamento
+        submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+        submitButton.disabled = true;
+        
+        try {
+            // Enviar para o Formspree via Fetch API
+            const response = await fetch('https://formspree.io/f/xkgzvody', {
+                method: 'POST',
+                body: new FormData(form),
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
+            
+            const result = await response.json();
+            
+            if (response.ok) {
+                // Sucesso - mostrar mensagem personalizada
+                showFormMessage('success', 'Mensagem enviada com sucesso!');
+                form.reset();
+            } else {
+                // Erro - mostrar mensagem de erro
+                throw new Error(result.error || 'Erro ao enviar formulário');
+            }
+        } catch (error) {
+            showFormMessage('error', error.message || 'Ocorreu um erro ao enviar. Por favor, tente novamente.');
+            console.error('Erro no Formspree:', error);
+        } finally {
+            // Restaurar botão
+            submitButton.innerHTML = originalButtonText;
+            submitButton.disabled = false;
+        }
+    });
+
+    function showFormMessage(type, message) {
+        const messagesDiv = document.getElementById('form-messages');
+        const iconClass = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
+        const alertClass = type === 'success' ? 'alert-success' : 'alert-error';
+        
+        messagesDiv.innerHTML = `
+            <div class="alert ${alertClass}" style="padding: 15px; border-radius: 4px; display: flex; align-items: center; gap: 10px;">
+                <i class="fas ${iconClass}" style="font-size: 1.2em;"></i>
+                ${message}
+            </div>
+        `;
+        messagesDiv.style.display = 'block';
+        
+        // Rolagem suave para a mensagem
+        messagesDiv.scrollIntoView({ behavior: 'smooth' });
+        
+        // Esconder mensagem após 5 segundos
+        setTimeout(() => {
+            messagesDiv.style.opacity = '0';
+            setTimeout(() => {
+                messagesDiv.style.display = 'none';
+                messagesDiv.style.opacity = '1';
+            }, 300);
+        }, 5000);
+    }
+    </script>
 
     <!-- Footer -->
     <footer class="footer">
